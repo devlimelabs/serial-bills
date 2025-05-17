@@ -1,0 +1,443 @@
+// Data file for US Currency Serial Number Patterns
+const serialNumberPatterns = {
+  "patterns": [
+    {
+      "id": 1,
+      "tier": 1,
+      "name": "Solid Serial Numbers",
+      "description": "All eight digits are identical",
+      "examples": ["11111111", "88888888", "33333333", "99999999"],
+      "value_range": {
+        "min": 1000,
+        "max": 20000,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Extremely Rare",
+        "statistical_chance": "1 in 11,111,111"
+      },
+      "rarity_factors": [
+        "Solid 9s are extremely rare in modern printing (only to 96000000)",
+        "Older series with solid numbers command higher premiums",
+        "Perfect uncirculated condition essential for maximum value"
+      ],
+      "notable_sales": "Some solid serial numbers have sold for as much as $20,000",
+      "image_example": "solid_serial.jpg",
+      "search_terms": ["solid", "repeating", "identical", "same digit"]
+    },
+    {
+      "id": 2,
+      "tier": 1,
+      "name": "Perfect Ladder Serial Numbers",
+      "description": "Complete ascending or descending sequence",
+      "examples": ["12345678", "98765432"],
+      "value_range": {
+        "min": 900,
+        "max": 2100,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Extremely Rare",
+        "statistical_chance": "1 in 5,555,555"
+      },
+      "rarity_factors": [
+        "Descending ladders are rarer than ascending (US currency typically printed from low to high)",
+        "Perfect condition essential for maximum value"
+      ],
+      "image_example": "ladder_serial.jpg",
+      "search_terms": ["ladder", "sequence", "ascending", "descending"]
+    },
+    {
+      "id": 3,
+      "tier": 2,
+      "name": "Low Serial Numbers (00000001-00000009)",
+      "description": "Serial numbers with seven leading zeros",
+      "examples": ["00000001", "00000005", "00000009"],
+      "value_range": {
+        "min": 500,
+        "max": 3500,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Extremely Rare",
+        "statistical_chance": "9 in 99,999,999"
+      },
+      "rarity_factors": [
+        "Number 00000001 is most valuable ($3,000-$3,500)",
+        "Value decreases as number approaches 00000009 ($600-$800)"
+      ],
+      "image_example": "low_serial.jpg",
+      "search_terms": ["low", "zeros", "leading zeros"]
+    },
+    {
+      "id": 4,
+      "tier": 2,
+      "name": "High Serial Numbers (9999999X)",
+      "description": "Serial numbers ending with 9999999X",
+      "examples": ["99999990", "99999999"],
+      "value_range": {
+        "min": 500,
+        "max": 1000,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Extremely Rare",
+        "statistical_chance": "10 in 99,999,999"
+      },
+      "rarity_factors": [
+        "Modern notes rarely printed to full 99999999 (typically stop at 96000000)",
+        "Older series with complete high numbers more valuable"
+      ],
+      "image_example": "high_serial.jpg",
+      "search_terms": ["high", "nines", "ending"]
+    },
+    {
+      "id": 5,
+      "tier": 2,
+      "name": "Million Serial Numbers",
+      "description": "Single digit followed by seven zeros",
+      "examples": ["10000000", "50000000", "90000000"],
+      "value_range": {
+        "min": 700,
+        "max": 1800,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Extremely Rare",
+        "statistical_chance": "9 in 99,999,999"
+      },
+      "rarity_factors": [
+        "Higher leading digits more valuable (e.g., 90000000 worth more than 10000000)"
+      ],
+      "image_example": "million_serial.jpg",
+      "search_terms": ["million", "zeros", "round number"]
+    },
+    {
+      "id": 6,
+      "tier": 3,
+      "name": "Low Serial Numbers (000000XX)",
+      "description": "Serial numbers with six leading zeros",
+      "examples": ["00000010", "00000050", "00000099"],
+      "value_range": {
+        "min": 100,
+        "max": 500,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Very Rare",
+        "statistical_chance": "90 in 99,999,999"
+      },
+      "rarity_factors": [
+        "Lower numbers more valuable (e.g., 00000010 worth more than 00000099)"
+      ],
+      "image_example": "low_serial_xx.jpg",
+      "search_terms": ["low", "zeros", "leading zeros"]
+    },
+    {
+      "id": 7,
+      "tier": 3,
+      "name": "High Serial Numbers (999999XX)",
+      "description": "Serial numbers with six leading nines",
+      "examples": ["99999900", "99999950", "99999999"],
+      "value_range": {
+        "min": 100,
+        "max": 400,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Very Rare",
+        "statistical_chance": "100 in 99,999,999"
+      },
+      "rarity_factors": [
+        "Higher numbers more valuable (e.g., 99999999 worth more than 99999900)"
+      ],
+      "image_example": "high_serial_xx.jpg",
+      "search_terms": ["high", "nines", "ending"]
+    },
+    {
+      "id": 8,
+      "tier": 3,
+      "name": "Super Repeater Serial Numbers",
+      "description": "First two digits repeated four times",
+      "examples": ["39393939", "12121212", "45454545"],
+      "value_range": {
+        "min": 100,
+        "max": 300,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Rare",
+        "statistical_chance": "1 in 1,111,111"
+      },
+      "image_example": "super_repeater.jpg",
+      "search_terms": ["super repeater", "repeating", "pattern"]
+    },
+    {
+      "id": 9,
+      "tier": 3,
+      "name": "Seven-In-A-Row Serial Numbers",
+      "description": "Seven identical digits in a row",
+      "examples": ["77777771", "17777777", "99999995"],
+      "value_range": {
+        "min": 80,
+        "max": 200,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Rare",
+        "statistical_chance": "1 in 1,111,111"
+      },
+      "rarity_factors": [
+        "Position of the unique digit affects value"
+      ],
+      "image_example": "seven_in_row.jpg",
+      "search_terms": ["seven", "row", "near solid"]
+    },
+    {
+      "id": 10,
+      "tier": 4,
+      "name": "Low Serial Numbers (00000XXX)",
+      "description": "Serial numbers with five leading zeros",
+      "examples": ["00000100", "00000555", "00000999"],
+      "value_range": {
+        "min": 30,
+        "max": 75,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Uncommon",
+        "statistical_chance": "900 in 99,999,999"
+      },
+      "image_example": "low_serial_xxx.jpg",
+      "search_terms": ["low", "zeros", "leading zeros"]
+    },
+    {
+      "id": 11,
+      "tier": 4,
+      "name": "High Serial Numbers (99999XXX)",
+      "description": "Serial numbers with five leading nines",
+      "examples": ["99999000", "99999500", "99999999"],
+      "value_range": {
+        "min": 50,
+        "max": 80,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Uncommon",
+        "statistical_chance": "1,000 in 99,999,999"
+      },
+      "image_example": "high_serial_xxx.jpg",
+      "search_terms": ["high", "nines", "ending"]
+    },
+    {
+      "id": 12,
+      "tier": 4,
+      "name": "Double Quad Serial Numbers",
+      "description": "First four digits are the same, last four digits are the same",
+      "examples": ["11112222", "77775555", "33336666"],
+      "value_range": {
+        "min": 80,
+        "max": 180,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Uncommon",
+        "statistical_chance": "1 in 111,111"
+      },
+      "image_example": "double_quad.jpg",
+      "search_terms": ["double quad", "quad double", "repeating blocks"]
+    },
+    {
+      "id": 13,
+      "tier": 4,
+      "name": "Partial Ladder Serial Numbers",
+      "description": "Partial ascending or descending sequence",
+      "examples": ["00234567", "00112233", "98765000"],
+      "value_range": {
+        "min": 95,
+        "max": 100,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Uncommon",
+        "statistical_chance": "Varies based on pattern completeness"
+      },
+      "image_example": "partial_ladder.jpg",
+      "search_terms": ["partial ladder", "sequence", "ascending", "descending"]
+    },
+    {
+      "id": 14,
+      "tier": 5,
+      "name": "True Binary Serial Numbers",
+      "description": "Contains only zeros and ones",
+      "examples": ["10101010", "11001100", "10000001"],
+      "value_range": {
+        "min": 40,
+        "max": 150,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Somewhat Common",
+        "statistical_chance": "1 in 256"
+      },
+      "image_example": "true_binary.jpg",
+      "search_terms": ["true binary", "binary", "zeros and ones", "computer code"]
+    },
+    {
+      "id": 15,
+      "tier": 5,
+      "name": "Binary Serial Numbers",
+      "description": "Contains only two unique digits in any order",
+      "examples": ["74747474", "38383838", "55335533"],
+      "value_range": {
+        "min": 20,
+        "max": 75,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Somewhat Common",
+        "statistical_chance": "More common than true binary"
+      },
+      "image_example": "binary.jpg",
+      "search_terms": ["binary", "two digits", "repeating pattern"]
+    },
+    {
+      "id": 16,
+      "tier": 5,
+      "name": "Repeater Serial Numbers",
+      "description": "First four digits repeated as last four digits",
+      "examples": ["12341234", "58675867", "90019001"],
+      "value_range": {
+        "min": 25,
+        "max": 50,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Somewhat Common",
+        "statistical_chance": "1 in 10,000"
+      },
+      "image_example": "repeater.jpg",
+      "search_terms": ["repeater", "repeated block", "double"]
+    },
+    {
+      "id": 17,
+      "tier": 5,
+      "name": "Radar Serial Numbers",
+      "description": "Reads the same forward and backward",
+      "examples": ["12344321", "88899888", "10577501"],
+      "value_range": {
+        "min": 15,
+        "max": 20,
+        "currency": "USD"
+      },
+      "rarity": {
+        "level": "Somewhat Common",
+        "statistical_chance": "1 in 10,000"
+      },
+      "image_example": "radar.jpg",
+      "search_terms": ["radar", "palindrome", "mirror", "same backwards"]
+    },
+    {
+      "id": 18,
+      "tier": 6,
+      "name": "Anniversary/Birthday Serial Numbers",
+      "description": "Represent significant dates",
+      "examples": ["07041776", "01151929", "12252020"],
+      "value_range": {
+        "min": 1,
+        "max": 1000,
+        "currency": "USD",
+        "note": "Value entirely dependent on significance to collector"
+      },
+      "rarity": {
+        "level": "Common (specific dates can be rare)",
+        "statistical_chance": "Common, but specific date combinations can be rare"
+      },
+      "rarity_factors": [
+        "Value entirely dependent on significance to collector",
+        "Historical dates (Declaration of Independence, etc.) more broadly valuable"
+      ],
+      "image_example": "date_serial.jpg",
+      "search_terms": ["date", "birthday", "anniversary", "historical date"]
+    },
+    {
+      "id": 19,
+      "tier": 6,
+      "name": "Trinary Serial Numbers",
+      "description": "Contains only three unique digits",
+      "examples": ["12121212", "39393333", "77557755"],
+      "value_range": {
+        "min": 1,
+        "max": 20,
+        "currency": "USD",
+        "note": "Sometimes above face value"
+      },
+      "rarity": {
+        "level": "Common",
+        "statistical_chance": "Common"
+      },
+      "image_example": "trinary.jpg",
+      "search_terms": ["trinary", "three digits", "pattern"]
+    }
+  ],
+  "value_factors": [
+    {
+      "factor": "Condition",
+      "description": "Uncirculated notes are worth significantly more than circulated ones"
+    },
+    {
+      "factor": "Denomination",
+      "description": "Higher denominations sometimes less collectible due to higher acquisition cost"
+    },
+    {
+      "factor": "Age",
+      "description": "Older series can command higher premiums"
+    },
+    {
+      "factor": "Star Notes",
+      "description": "Replacement notes (indicated by star symbol) with fancy serials are worth more"
+    },
+    {
+      "factor": "Federal Reserve Bank",
+      "description": "Some collectors focus on specific FRBs, affecting demand"
+    }
+  ],
+  "tiers": [
+    {
+      "tier": 1,
+      "name": "Extremely Valuable Patterns",
+      "value_range": "$1,000+",
+      "description": "The rarest and most sought-after serial number patterns"
+    },
+    {
+      "tier": 2,
+      "name": "Very Valuable Patterns",
+      "value_range": "$500-$999",
+      "description": "Highly desirable patterns with significant collector demand"
+    },
+    {
+      "tier": 3,
+      "name": "Valuable Patterns",
+      "value_range": "$100-$499",
+      "description": "Patterns with strong collector interest and moderate rarity"
+    },
+    {
+      "tier": 4,
+      "name": "Moderately Valuable Patterns",
+      "value_range": "$50-$99",
+      "description": "Patterns with consistent collector demand but greater availability"
+    },
+    {
+      "tier": 5,
+      "name": "Slightly Valuable Patterns",
+      "value_range": "$15-$49",
+      "description": "Common patterns with modest premium over face value"
+    },
+    {
+      "tier": 6,
+      "name": "Variable Value Patterns",
+      "value_range": "Face Value to $100+",
+      "description": "Patterns whose value depends heavily on subjective factors"
+    }
+  ]
+};

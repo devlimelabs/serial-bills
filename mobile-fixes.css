@@ -1,0 +1,211 @@
+/* Mobile Responsiveness Fixes */
+
+/* Media query for mobile devices */
+@media screen and (max-width: 768px) {
+  /* Header and Navigation */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .header-container {
+    padding: var(--spacing-sm) 0;
+  }
+  
+  .logo {
+    font-size: 1.2rem;
+  }
+  
+  .logo img {
+    height: 30px;
+  }
+  
+  /* Mobile Navigation */
+  .menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    padding: var(--spacing-sm);
+    margin-right: -var(--spacing-sm);
+  }
+  
+  .nav-menu {
+    position: fixed;
+    top: 60px;
+    right: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: calc(100vh - 60px);
+    flex-direction: column;
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-lg);
+    transition: right var(--transition-medium);
+    z-index: 99;
+    padding: var(--spacing-md) 0;
+  }
+  
+  .nav-menu.active {
+    right: 0;
+  }
+  
+  .nav-item {
+    width: 100%;
+  }
+  
+  .nav-link {
+    display: block;
+    padding: var(--spacing-md) var(--spacing-lg);
+    width: 100%;
+    text-align: left;
+  }
+  
+  .nav-link::after {
+    display: none;
+  }
+  
+  /* Hero Section */
+  .hero-banner {
+    padding: var(--spacing-xl) 0;
+  }
+  
+  .hero-banner h1 {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+  
+  /* Search */
+  .search-container {
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  #search-input {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+  
+  .search-button {
+    width: 50px;
+  }
+  
+  /* Quick Filters */
+  .quick-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: var(--spacing-sm);
+    justify-content: flex-start;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .filter-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  
+  /* Content with Sidebar */
+  .content-with-sidebar {
+    flex-direction: column;
+  }
+  
+  .filter-sidebar {
+    width: 100%;
+    position: relative;
+    top: 0;
+    margin-bottom: var(--spacing-lg);
+  }
+  
+  #filter-options {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-medium);
+  }
+  
+  #filter-options.collapsed {
+    max-height: 1000px;
+  }
+  
+  /* View Controls */
+  .view-controls {
+    margin-bottom: var(--spacing-md);
+  }
+  
+  /* Patterns Grid */
+  .patterns-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  /* Serial Number Checker */
+  .checker-container {
+    flex-direction: column;
+    padding: var(--spacing-md);
+  }
+  
+  /* Tier Tabs */
+  .tier-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: var(--spacing-sm);
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .tier-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  
+  /* Back to Top Button */
+  #back-to-top {
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+  }
+  
+  /* Visualization Tabs */
+  .viz-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: var(--spacing-sm);
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .viz-tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+  
+  /* Chart Containers */
+  .chart-container {
+    height: 300px;
+  }
+}
+
+/* Small mobile devices */
+@media screen and (max-width: 480px) {
+  .hero-banner h1 {
+    font-size: 1.75rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+  }
+  
+  .pagination-numbers {
+    gap: 2px;
+  }
+  
+  .pagination-number {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+}
