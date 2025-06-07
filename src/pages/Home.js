@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Box, 
   Container, 
@@ -7,373 +7,393 @@ import {
   Card, 
   CardContent, 
   Button,
-  Avatar,
+  TextField,
+  InputAdornment,
+  IconButton,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  Paper,
+  Fade,
+  Zoom
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { Link as RouterLink } from 'react-router-dom';
-import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import VerifiedIcon from '@mui/icons-material/Verified';
+import SpeedIcon from '@mui/icons-material/Speed';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import { isValidSerialNumber } from '../utils/serialChecker';
 
-const SectionContainer = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(8, 0),
-}));
-
-const StatsCard = styled(Card)(({ theme }) => ({
-  height: '100%',
+const HeroSection = styled(Box)(({ theme }) => ({
+  minHeight: '85vh',
   display: 'flex',
-  flexDirection: 'column',
-  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
-  '&:hover': {
-    transform: 'translateY(-5px)',
-    boxShadow: theme.shadows[4],
+  alignItems: 'center',
+  background: `linear-gradient(135deg, ${theme.palette.background.default} 0%, ${theme.palette.grey[50]} 100%)`,
+  position: 'relative',
+  overflow: 'hidden',
+  '&::before': {
+    content: '""',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    background: 'radial-gradient(circle at 20% 80%, rgba(0, 102, 255, 0.05) 0%, transparent 50%)',
+    pointerEvents: 'none',
+  },
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    top: '50%',
+    right: '-10%',
+    width: '600px',
+    height: '600px',
+    background: 'radial-gradient(circle, rgba(255, 71, 87, 0.05) 0%, transparent 70%)',
+    pointerEvents: 'none',
   },
 }));
 
-const IconAvatar = styled(Avatar)(({ theme, color }) => ({
-  backgroundColor: color || theme.palette.primary.main,
-  width: 56,
-  height: 56,
-  marginBottom: theme.spacing(2),
+const SerialInput = styled(TextField)(({ theme }) => ({
+  '& .MuiOutlinedInput-root': {
+    fontSize: '1.25rem',
+    fontFamily: "'JetBrains Mono', monospace",
+    backgroundColor: theme.palette.background.paper,
+    '& input': {
+      textAlign: 'center',
+      letterSpacing: '0.1em',
+      textTransform: 'uppercase',
+    },
+  },
 }));
 
 const FeatureCard = styled(Card)(({ theme }) => ({
   height: '100%',
-  display: 'flex',
-  flexDirection: 'column',
-  transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+  borderRadius: 16,
+  transition: 'all 0.3s ease',
+  cursor: 'pointer',
+  border: `2px solid transparent`,
   '&:hover': {
-    transform: 'translateY(-5px)',
+    transform: 'translateY(-4px)',
+    borderColor: theme.palette.primary.main,
+    boxShadow: '0px 20px 40px rgba(0, 0, 0, 0.1)',
+  },
+}));
+
+const StatCard = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(3),
+  textAlign: 'center',
+  borderRadius: 16,
+  background: theme.palette.background.paper,
+  border: `1px solid ${theme.palette.divider}`,
+  transition: 'all 0.3s ease',
+  '&:hover': {
     boxShadow: theme.shadows[4],
+  },
+}));
+
+const SerialExample = styled(Box)(({ theme }) => ({
+  display: 'inline-block',
+  padding: theme.spacing(0.5, 1.5),
+  backgroundColor: theme.palette.grey[100],
+  borderRadius: 8,
+  fontFamily: "'JetBrains Mono', monospace",
+  fontSize: '0.875rem',
+  letterSpacing: '0.05em',
+  margin: theme.spacing(0.5),
+  border: `1px solid ${theme.palette.divider}`,
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    transform: 'translateY(-2px)',
   },
 }));
 
 const Home = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const navigate = useNavigate();
+  const [serialInput, setSerialInput] = useState('');
+  const [inputError, setInputError] = useState('');
+
+  const handleSerialSubmit = (e) => {
+    e.preventDefault();
+    if (!serialInput) {
+      setInputError('Please enter a serial number');
+      return;
+    }
+    if (!isValidSerialNumber(serialInput)) {
+      setInputError('Invalid format. Use: Letter + 8 digits + Letter/Star');
+      return;
+    }
+    navigate(`/checker?serial=${serialInput}`);
+  };
+
+  const handleExampleClick = (serial) => {
+    setSerialInput(serial);
+    setInputError('');
+  };
+
+  const features = [
+    {
+      icon: <VerifiedIcon sx={{ fontSize: 40 }} />,
+      title: 'Instant Verification',
+      description: 'Check any serial number instantly to discover valuable patterns and estimated worth',
+      link: '/checker',
+      color: theme.palette.success.main,
+    },
+    {
+      icon: <TrendingUpIcon sx={{ fontSize: 40 }} />,
+      title: 'Market Values',
+      description: 'Real-time market values based on recent sales data and collector demand',
+      link: '/patterns',
+      color: theme.palette.warning.main,
+    },
+    {
+      icon: <SpeedIcon sx={{ fontSize: 40 }} />,
+      title: 'Pattern Recognition',
+      description: 'Advanced pattern detection for 19+ valuable serial number types',
+      link: '/guide',
+      color: theme.palette.info.main,
+    },
+  ];
+
+  const stats = [
+    { label: 'Highest Value', value: '$20,000+', subtext: 'Solid 9s Perfect Condition' },
+    { label: 'Rarest Pattern', value: '1 in 11M', subtext: 'Solid Serial Numbers' },
+    { label: 'Pattern Types', value: '19+', subtext: 'Collectible Patterns' },
+    { label: 'Active Collectors', value: '50,000+', subtext: 'Worldwide Community' },
+  ];
+
+  const popularSerials = [
+    'A12345678B',
+    'A88888888B',
+    'A11111111*',
+    'A98765432B',
+    'A00000001B',
+    'A12121212B',
+  ];
 
   return (
-    <Box component="main">
-      {/* Intro Section */}
-      <SectionContainer 
-        sx={{ 
-          backgroundColor: theme.palette.background.paper,
-          textAlign: 'center'
-        }}
-      >
-        <Container>
-          <Typography variant="h2" component="h2" gutterBottom>
-            The Hidden Value in Serial Numbers
-          </Typography>
-          <Typography variant="body1" paragraph sx={{ maxWidth: 800, mx: 'auto', mb: 4 }}>
-            Your ordinary dollar bills might be worth hundreds or even thousands of times their face value 
-            if they contain special serial number patterns. This comprehensive guide explores the fascinating 
-            world of currency collecting focused on these unique numerical sequences.
-          </Typography>
-          
-          {/* Key Stats */}
-          <Grid container spacing={4} justifyContent="center">
-            <Grid item xs={12} sm={6} md={4}>
-              <StatsCard elevation={2}>
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <IconAvatar color="#D32F2F">
-                    <MonetizationOnOutlinedIcon fontSize="large" />
-                  </IconAvatar>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    Highest Value
+    <Box>
+      <HeroSection>
+        <Container maxWidth="lg">
+          <Grid container spacing={6} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Fade in timeout={800}>
+                <Box>
+                  <Typography 
+                    variant="overline" 
+                    sx={{ 
+                      color: theme.palette.primary.main,
+                      fontWeight: 700,
+                      mb: 2,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: 1,
+                    }}
+                  >
+                    <AutoAwesomeIcon fontSize="small" />
+                    CHECK YOUR BILLS TODAY
                   </Typography>
-                  <Typography variant="h4" component="p" color="primary" sx={{ fontWeight: 700 }}>
-                    $20,000+
+                  
+                  <Typography 
+                    variant="h1" 
+                    component="h1" 
+                    gutterBottom
+                    sx={{ 
+                      fontWeight: 900,
+                      background: theme.custom.gradients.primary,
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      mb: 3,
+                    }}
+                  >
+                    Your Bills Could Be Worth Thousands
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Solid 9s in perfect condition
+                  
+                  <Typography 
+                    variant="h5" 
+                    color="text.secondary" 
+                    paragraph
+                    sx={{ mb: 4, fontWeight: 400 }}
+                  >
+                    Instantly check any US dollar bill serial number for valuable patterns. 
+                    Some bills are worth 100x+ their face value.
                   </Typography>
-                </CardContent>
-              </StatsCard>
+
+                  <form onSubmit={handleSerialSubmit}>
+                    <SerialInput
+                      fullWidth
+                      placeholder="A12345678B"
+                      value={serialInput}
+                      onChange={(e) => {
+                        setSerialInput(e.target.value.toUpperCase());
+                        setInputError('');
+                      }}
+                      error={!!inputError}
+                      helperText={inputError}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              type="submit"
+                              sx={{ 
+                                background: theme.custom.gradients.primary,
+                                color: 'white',
+                                '&:hover': {
+                                  background: theme.custom.gradients.primary,
+                                  transform: 'scale(1.05)',
+                                },
+                              }}
+                            >
+                              <SearchIcon />
+                            </IconButton>
+                          </InputAdornment>
+                        ),
+                      }}
+                      sx={{ mb: 3 }}
+                    />
+                  </form>
+
+                  <Box>
+                    <Typography variant="body2" color="text.secondary" gutterBottom>
+                      Try these examples:
+                    </Typography>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                      {popularSerials.map((serial) => (
+                        <SerialExample 
+                          key={serial}
+                          onClick={() => handleExampleClick(serial)}
+                        >
+                          {serial}
+                        </SerialExample>
+                      ))}
+                    </Box>
+                  </Box>
+                </Box>
+              </Fade>
             </Grid>
-            
-            <Grid item xs={12} sm={6} md={4}>
-              <StatsCard elevation={2}>
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <IconAvatar color="#1976D2">
-                    <SearchIcon fontSize="large" />
-                  </IconAvatar>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    Pattern Types
-                  </Typography>
-                  <Typography variant="h4" component="p" color="primary" sx={{ fontWeight: 700 }}>
-                    19+
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Distinct collectible patterns
-                  </Typography>
-                </CardContent>
-              </StatsCard>
-            </Grid>
-            
-            <Grid item xs={12} sm={6} md={4}>
-              <StatsCard elevation={2}>
-                <CardContent sx={{ textAlign: 'center', py: 3 }}>
-                  <IconAvatar color="#4CAF50">
-                    <MonetizationOnOutlinedIcon fontSize="large" />
-                  </IconAvatar>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    Rarest Pattern
-                  </Typography>
-                  <Typography variant="h4" component="p" color="primary" sx={{ fontWeight: 700 }}>
-                    1 in 11,111,111
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Odds of finding a solid serial
-                  </Typography>
-                </CardContent>
-              </StatsCard>
+
+            <Grid item xs={12} md={6}>
+              <Zoom in timeout={1000}>
+                <Grid container spacing={2}>
+                  {stats.map((stat, index) => (
+                    <Grid item xs={6} key={index}>
+                      <StatCard elevation={0}>
+                        <Typography 
+                          variant="h4" 
+                          sx={{ 
+                            fontWeight: 800,
+                            color: theme.palette.primary.main,
+                            mb: 0.5,
+                          }}
+                        >
+                          {stat.value}
+                        </Typography>
+                        <Typography variant="subtitle2" fontWeight={600}>
+                          {stat.label}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
+                          {stat.subtext}
+                        </Typography>
+                      </StatCard>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Zoom>
             </Grid>
           </Grid>
         </Container>
-      </SectionContainer>
-      
+      </HeroSection>
+
       {/* Features Section */}
-      <SectionContainer>
-        <Container>
-          <Typography variant="h2" component="h2" align="center" gutterBottom>
-            Explore Our Features
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Box textAlign="center" mb={6}>
+          <Typography variant="h2" component="h2" gutterBottom fontWeight={800}>
+            Everything You Need
           </Typography>
-          <Typography variant="body1" align="center" paragraph sx={{ maxWidth: 800, mx: 'auto', mb: 5 }}>
-            Our comprehensive tools help you identify, understand, and value currency based on 
-            serial number patterns. Whether you're a seasoned collector or just curious about 
-            what might be in your wallet, we have everything you need.
+          <Typography variant="h5" color="text.secondary" fontWeight={400}>
+            Professional tools for serial number collectors and enthusiasts
           </Typography>
-          
-          <Grid container spacing={4}>
-            <Grid item xs={12} md={4}>
-              <FeatureCard elevation={3}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', p: 3 }}>
-                  <IconAvatar>
-                    <SearchIcon fontSize="large" />
-                  </IconAvatar>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    Pattern Search
-                  </Typography>
-                  <Typography variant="body2" paragraph sx={{ flexGrow: 1 }}>
-                    Browse our comprehensive database of valuable serial number patterns. 
-                    Filter by value, rarity, or pattern type to find exactly what you're looking for.
-                  </Typography>
-                  <Button 
-                    variant="contained" 
-                    component={RouterLink} 
-                    to="/patterns" 
-                    color="primary"
-                    sx={{ mt: 2 }}
-                  >
-                    Browse Patterns
-                  </Button>
-                </CardContent>
-              </FeatureCard>
+        </Box>
+
+        <Grid container spacing={4}>
+          {features.map((feature, index) => (
+            <Grid item xs={12} md={4} key={index}>
+              <Fade in timeout={800 + index * 200}>
+                <FeatureCard
+                  onClick={() => navigate(feature.link)}
+                  elevation={0}
+                >
+                  <CardContent sx={{ p: 4, textAlign: 'center' }}>
+                    <Box
+                      sx={{
+                        width: 80,
+                        height: 80,
+                        borderRadius: '50%',
+                        background: `${feature.color}15`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mx: 'auto',
+                        mb: 3,
+                        color: feature.color,
+                      }}
+                    >
+                      {feature.icon}
+                    </Box>
+                    <Typography variant="h5" component="h3" gutterBottom fontWeight={700}>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      {feature.description}
+                    </Typography>
+                  </CardContent>
+                </FeatureCard>
+              </Fade>
             </Grid>
-            
-            <Grid item xs={12} md={4}>
-              <FeatureCard elevation={3}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', p: 3 }}>
-                  <IconAvatar color={theme.palette.secondary.main}>
-                    <MonetizationOnOutlinedIcon fontSize="large" />
-                  </IconAvatar>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    Serial Checker
-                  </Typography>
-                  <Typography variant="body2" paragraph sx={{ flexGrow: 1 }}>
-                    Enter any serial number and our tool will identify valuable patterns and provide 
-                    an estimated value based on denomination, condition, and rarity.
-                  </Typography>
-                  <Button 
-                    variant="contained" 
-                    component={RouterLink} 
-                    to="/checker" 
-                    color="secondary"
-                    sx={{ mt: 2 }}
-                  >
-                    Check Serial Number
-                  </Button>
-                </CardContent>
-              </FeatureCard>
-            </Grid>
-            
-            <Grid item xs={12} md={4}>
-              <FeatureCard elevation={3}>
-                <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', p: 3 }}>
-                  <IconAvatar color="#5C6BC0">
-                    <MenuBookIcon fontSize="large" />
-                  </IconAvatar>
-                  <Typography variant="h5" component="h3" gutterBottom>
-                    Collector's Guide
-                  </Typography>
-                  <Typography variant="body2" paragraph sx={{ flexGrow: 1 }}>
-                    Learn everything you need to know about collecting valuable serial numbers 
-                    with our comprehensive guide, including history, factors affecting value, and more.
-                  </Typography>
-                  <Button 
-                    variant="contained" 
-                    component={RouterLink} 
-                    to="/guide" 
-                    color="primary"
-                    sx={{ mt: 2, bgcolor: '#5C6BC0' }}
-                  >
-                    Read Guide
-                  </Button>
-                </CardContent>
-              </FeatureCard>
-            </Grid>
-          </Grid>
-        </Container>
-      </SectionContainer>
-      
-      {/* Value Tiers Section */}
-      <SectionContainer sx={{ backgroundColor: theme.palette.background.paper }}>
-        <Container>
-          <Typography variant="h2" component="h2" align="center" gutterBottom>
-            Value Tiers at a Glance
-          </Typography>
-          <Typography variant="body1" align="center" paragraph sx={{ maxWidth: 800, mx: 'auto', mb: 5 }}>
-            Serial number patterns are categorized into six value tiers based on their market value, 
-            rarity, and collector demand. Explore each tier to discover patterns in your budget range.
-          </Typography>
-          
-          <Button 
-            variant="contained" 
-            component={RouterLink} 
-            to="/tiers" 
-            color="primary"
-            size="large"
-            sx={{ display: 'block', mx: 'auto', mb: 4 }}
-          >
-            Explore Value Tiers
-          </Button>
-          
-          {/* Preview grid of tiers */}
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={4}>
-              <Card 
-                sx={{ 
-                  bgcolor: '#D32F2F', 
-                  color: 'white',
-                  p: 2,
-                  height: '100%'
-                }}
-              >
-                <Typography variant="h6">Tier 1: Extremely Valuable</Typography>
-                <Typography variant="body2">$1,000+</Typography>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Card 
-                sx={{ 
-                  bgcolor: '#F57C00', 
-                  color: 'white',
-                  p: 2,
-                  height: '100%'
-                }}
-              >
-                <Typography variant="h6">Tier 2: Very Valuable</Typography>
-                <Typography variant="body2">$500-$999</Typography>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Card 
-                sx={{ 
-                  bgcolor: '#7B1FA2', 
-                  color: 'white',
-                  p: 2,
-                  height: '100%'
-                }}
-              >
-                <Typography variant="h6">Tier 3: Valuable</Typography>
-                <Typography variant="body2">$100-$499</Typography>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Card 
-                sx={{ 
-                  bgcolor: '#388E3C', 
-                  color: 'white',
-                  p: 2,
-                  height: '100%'
-                }}
-              >
-                <Typography variant="h6">Tier 4: Moderately Valuable</Typography>
-                <Typography variant="body2">$50-$99</Typography>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Card 
-                sx={{ 
-                  bgcolor: '#1976D2', 
-                  color: 'white',
-                  p: 2,
-                  height: '100%'
-                }}
-              >
-                <Typography variant="h6">Tier 5: Slightly Valuable</Typography>
-                <Typography variant="body2">$15-$49</Typography>
-              </Card>
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <Card 
-                sx={{ 
-                  bgcolor: '#757575', 
-                  color: 'white',
-                  p: 2,
-                  height: '100%'
-                }}
-              >
-                <Typography variant="h6">Tier 6: Variable Value</Typography>
-                <Typography variant="body2">Face Value to $100+</Typography>
-              </Card>
-            </Grid>
-          </Grid>
-        </Container>
-      </SectionContainer>
-      
+          ))}
+        </Grid>
+      </Container>
+
       {/* CTA Section */}
-      <SectionContainer 
-        sx={{ 
-          backgroundColor: theme.palette.primary.main,
-          color: 'white',
-          textAlign: 'center'
-        }}
-      >
-        <Container>
-          <Typography variant="h3" component="h2" gutterBottom>
-            Check Your Bills Now
+      <Box sx={{ 
+        py: 8, 
+        background: theme.custom.gradients.primary,
+        color: 'white',
+        textAlign: 'center',
+      }}>
+        <Container maxWidth="md">
+          <Typography variant="h3" component="h2" gutterBottom fontWeight={800}>
+            Start Checking Your Bills Now
           </Typography>
-          <Typography variant="h6" component="p" gutterBottom sx={{ maxWidth: 800, mx: 'auto', mb: 4, fontWeight: 'normal' }}>
-            You might have valuable currency in your wallet right now. 
-            Use our serial number checker to find out!
+          <Typography variant="h6" sx={{ mb: 4, fontWeight: 400 }}>
+            Join thousands of collectors who've discovered valuable bills in their wallets
           </Typography>
-          
-          <Button 
-            variant="contained" 
-            component={RouterLink} 
-            to="/checker" 
-            color="secondary"
+          <Button
+            variant="contained"
             size="large"
-            sx={{ 
-              py: 1.5, 
-              px: 4, 
-              fontSize: '1.1rem',
+            component={RouterLink}
+            to="/checker"
+            sx={{
+              backgroundColor: 'white',
+              color: theme.palette.primary.main,
+              fontWeight: 700,
+              px: 4,
+              py: 1.5,
               '&:hover': {
-                transform: 'scale(1.05)',
-                boxShadow: theme.shadows[10],
+                backgroundColor: theme.palette.grey[100],
+                transform: 'translateY(-2px)',
               },
-              transition: 'all 0.3s ease',
             }}
           >
-            Check Serial Number
+            Check a Serial Number
           </Button>
         </Container>
-      </SectionContainer>
+      </Box>
     </Box>
   );
 };

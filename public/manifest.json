@@ -1,6 +1,6 @@
 {
-  "short_name": "Serial Guide",
-  "name": "US Currency Serial Number Guide",
+  "short_name": "SerialValue",
+  "name": "SerialValue - US Currency Pattern Checker",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#004D40",
-  "background_color": "#FFFFFF"
+  "theme_color": "#0066FF",
+  "background_color": "#FAFBFC"
 }

@@ -5,340 +5,277 @@ import {
   Toolbar,
   Typography,
   Button,
-  TextField,
-  InputAdornment,
   IconButton,
   Drawer,
   List,
-  ListItem,
+  ListItemButton,
   ListItemText,
   Box,
   Container,
-  Chip,
   useMediaQuery,
   useScrollTrigger,
-  Slide
+  Divider
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import SearchIcon from '@mui/icons-material/Search';
 import MenuIcon from '@mui/icons-material/Menu';
-import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
-import { usePatterns } from '../../context/PatternContext';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import CloseIcon from '@mui/icons-material/Close';
 
-// Styled components
-const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  background: theme.palette.primary.main,
+const StyledAppBar = styled(AppBar)(({ theme, scrolled }) => ({
+  transition: 'all 0.3s ease',
+  boxShadow: scrolled ? theme.shadows[4] : 'none',
+  backgroundColor: scrolled 
+    ? 'rgba(255, 255, 255, 0.98)' 
+    : 'transparent',
+  backdropFilter: scrolled ? 'blur(10px)' : 'none',
+  padding: scrolled ? '0' : theme.spacing(1, 0),
 }));
 
 const LogoContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  marginRight: theme.spacing(2),
+  gap: theme.spacing(1),
+  cursor: 'pointer',
+  transition: 'all 0.2s ease',
+  '&:hover': {
+    transform: 'scale(1.02)',
+  },
 }));
 
-const NavButtons = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  marginLeft: theme.spacing(2),
-  '& > *': {
-    marginLeft: theme.spacing(1),
+const NavButton = styled(Button)(({ theme, active }) => ({
+  fontSize: '0.95rem',
+  fontWeight: 600,
+  color: theme.palette.text.primary,
+  padding: theme.spacing(1, 2),
+  borderRadius: 8,
+  position: 'relative',
+  transition: 'all 0.2s ease',
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    bottom: 0,
+    left: '50%',
+    transform: 'translateX(-50%)',
+    width: active ? '30px' : '0',
+    height: '3px',
+    backgroundColor: theme.palette.primary.main,
+    borderRadius: '3px 3px 0 0',
+    transition: 'width 0.2s ease',
   },
-  [theme.breakpoints.down('md')]: {
-    display: 'none',
+  '&:hover': {
+    backgroundColor: theme.palette.grey[100],
+    '&::after': {
+      width: '30px',
+    },
   },
 }));
 
 const MobileMenuButton = styled(IconButton)(({ theme }) => ({
-  marginRight: theme.spacing(1),
   display: 'none',
   [theme.breakpoints.down('md')]: {
     display: 'flex',
   },
-  color: theme.palette.common.white,
+  color: theme.palette.text.primary,
 }));
 
-const SearchBar = styled(TextField)(({ theme }) => ({
-  backgroundColor: 'rgba(255, 255, 255, 0.15)',
-  borderRadius: theme.shape.borderRadius,
-  width: '100%',
-  maxWidth: 400,
-  '& .MuiOutlinedInput-root': {
-    color: theme.palette.common.white,
-    '& fieldset': {
-      borderColor: 'transparent',
-    },
-    '&:hover fieldset': {
-      borderColor: 'rgba(255, 255, 255, 0.3)',
-    },
-    '&.Mui-focused fieldset': {
-      borderColor: theme.palette.secondary.main,
-    },
-  },
-  '& .MuiInputLabel-root': {
-    color: 'rgba(255, 255, 255, 0.7)',
-  },
-  '& .MuiInputAdornment-root': {
-    color: 'rgba(255, 255, 255, 0.7)',
-  },
+const DrawerContent = styled(Box)(({ theme }) => ({
+  width: 280,
+  height: '100%',
+  backgroundColor: theme.palette.background.paper,
 }));
 
-const HeroSection = styled(Box)(({ theme }) => ({
-  padding: theme.spacing(8, 0, 6),
-  backgroundImage: 'linear-gradient(rgba(0, 77, 64, 0.9), rgba(0, 77, 64, 0.8))',
-  backgroundSize: 'cover',
-  backgroundPosition: 'center',
-  color: theme.palette.common.white,
-  textAlign: 'center',
-}));
-
-const QuickFilterContainer = styled(Box)(({ theme }) => ({
+const DrawerHeader = styled(Box)(({ theme }) => ({
   display: 'flex',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
-  gap: theme.spacing(1),
-  marginTop: theme.spacing(3),
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: theme.spacing(2),
+  borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-// Hide on scroll component
-function HideOnScroll({ children }) {
-  const trigger = useScrollTrigger();
+function ElevationScroll(props) {
+  const { children } = props;
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 10,
+  });
 
-  return (
-    <Slide appear={false} direction="down" in={!trigger}>
-      {children}
-    </Slide>
-  );
+  return React.cloneElement(children, {
+    scrolled: trigger,
+  });
 }
 
 const Header = () => {
   const location = useLocation();
-  const { filterPatterns, searchTerm, setSearchTerm } = usePatterns();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState('');
   const isMobile = useMediaQuery((theme) => theme.breakpoints.down('md'));
-  const isHomePage = location.pathname === '/';
-
-  // Synchronize search input with context
-  useEffect(() => {
-    setSearchValue(searchTerm);
-  }, [searchTerm]);
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
-    filterPatterns({ search: searchValue });
-  };
-
-  const handleQuickFilter = (filter) => {
-    if (filter === 'tier-1') {
-      filterPatterns({ tier: 1 });
-    } else {
-      filterPatterns({ 
-        pattern: filter 
-      });
-    }
-  };
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  const closeMobileMenu = () => {
-    setMobileMenuOpen(false);
-  };
 
   const navigationLinks = [
+    { text: 'Home', path: '/' },
+    { text: 'Check Serial', path: '/checker', highlight: true },
     { text: 'Patterns', path: '/patterns' },
-    { text: 'Value Tiers', path: '/tiers' },
-    { text: 'Serial Checker', path: '/checker' },
-    { text: 'Guide', path: '/guide' },
-    { text: 'About', path: '/about' },
+    { text: 'Value Guide', path: '/tiers' },
+    { text: 'Learn', path: '/guide' },
   ];
 
-  const quickFilters = [
-    { label: 'Extremely Valuable', value: 'tier-1' },
-    { label: 'Solid Numbers', value: 'solid' },
-    { label: 'Ladders', value: 'ladder' },
-    { label: 'Binary', value: 'binary' },
-    { label: 'Radar', value: 'radar' },
-  ];
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location]);
 
   return (
     <>
-      <HideOnScroll>
-        <StyledAppBar position="sticky">
-          <Toolbar>
-            <MobileMenuButton
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              onClick={toggleMobileMenu}
-            >
-              <MenuIcon />
-            </MobileMenuButton>
-            
+      <ElevationScroll>
+        <StyledAppBar position="fixed" color="default">
+          <Container maxWidth="lg">
+            <Toolbar disableGutters sx={{ minHeight: { xs: 64, sm: 70 } }}>
+              <LogoContainer component={RouterLink} to="/">
+                <MonetizationOnIcon 
+                  sx={{ 
+                    fontSize: 32,
+                    color: (theme) => theme.palette.primary.main,
+                  }} 
+                />
+                <Box>
+                  <Typography
+                    variant="h6"
+                    component="div"
+                    sx={{
+                      fontWeight: 800,
+                      background: (theme) => theme.custom.gradients.primary,
+                      backgroundClip: 'text',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      lineHeight: 1,
+                    }}
+                  >
+                    SerialValue
+                  </Typography>
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      color: 'text.secondary',
+                      fontWeight: 500,
+                      lineHeight: 1,
+                      letterSpacing: '-0.02em',
+                    }}
+                  >
+                    US Currency Guide
+                  </Typography>
+                </Box>
+              </LogoContainer>
+
+              <Box sx={{ flexGrow: 1 }} />
+
+              {!isMobile && (
+                <Box sx={{ display: 'flex', gap: 0.5 }}>
+                  {navigationLinks.map((link) => (
+                    <NavButton
+                      key={link.path}
+                      component={RouterLink}
+                      to={link.path}
+                      active={location.pathname === link.path}
+                      variant={link.highlight ? 'contained' : 'text'}
+                      color={link.highlight ? 'primary' : 'inherit'}
+                      sx={link.highlight ? { 
+                        boxShadow: (theme) => theme.shadows[2],
+                        '&::after': { display: 'none' }
+                      } : {}}
+                    >
+                      {link.text}
+                    </NavButton>
+                  ))}
+                </Box>
+              )}
+
+              <MobileMenuButton
+                edge="end"
+                aria-label="menu"
+                onClick={() => setMobileMenuOpen(true)}
+              >
+                <MenuIcon />
+              </MobileMenuButton>
+            </Toolbar>
+          </Container>
+        </StyledAppBar>
+      </ElevationScroll>
+
+      {/* Spacer for fixed AppBar */}
+      <Toolbar sx={{ minHeight: { xs: 64, sm: 70 } }} />
+
+      {/* Mobile Drawer */}
+      <Drawer
+        anchor="right"
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        PaperProps={{
+          sx: {
+            backgroundColor: 'background.paper',
+          }
+        }}
+      >
+        <DrawerContent>
+          <DrawerHeader>
             <LogoContainer>
-              <MonetizationOnOutlinedIcon sx={{ mr: 1 }} />
+              <MonetizationOnIcon 
+                sx={{ 
+                  fontSize: 28,
+                  color: (theme) => theme.palette.primary.main,
+                }} 
+              />
               <Typography
                 variant="h6"
-                component={RouterLink}
-                to="/"
                 sx={{
-                  textDecoration: 'none',
-                  color: 'inherit',
-                  fontWeight: 700,
+                  fontWeight: 800,
+                  color: 'primary.main',
                 }}
               >
-                Currency Serial Guide
+                SerialValue
               </Typography>
             </LogoContainer>
-
-            <NavButtons>
-              {navigationLinks.map((link) => (
-                <Button
-                  key={link.path}
-                  component={RouterLink}
+            <IconButton onClick={() => setMobileMenuOpen(false)}>
+              <CloseIcon />
+            </IconButton>
+          </DrawerHeader>
+          
+          <List sx={{ pt: 2 }}>
+            {navigationLinks.map((link) => (
+              <React.Fragment key={link.path}>
+                <ListItemButton 
+                  component={RouterLink} 
                   to={link.path}
-                  color="inherit"
+                  selected={location.pathname === link.path}
                   sx={{
-                    borderBottom: location.pathname === link.path ? '3px solid' : 'none',
-                    borderColor: 'secondary.main',
-                    borderRadius: 0,
-                    paddingBottom: '3px',
+                    mx: 2,
+                    mb: 1,
+                    borderRadius: 2,
+                    backgroundColor: link.highlight ? 'primary.main' : 'transparent',
+                    color: link.highlight ? 'primary.contrastText' : 'text.primary',
+                    '&:hover': {
+                      backgroundColor: link.highlight 
+                        ? 'primary.dark' 
+                        : 'grey.100',
+                    },
+                    '&.Mui-selected': {
+                      backgroundColor: location.pathname === link.path && !link.highlight
+                        ? 'grey.100' 
+                        : link.highlight 
+                        ? 'primary.main' 
+                        : 'transparent',
+                    },
                   }}
                 >
-                  {link.text}
-                </Button>
-              ))}
-            </NavButtons>
-
-            <Box sx={{ flexGrow: 1 }} />
-
-            {!isMobile && (
-              <Box sx={{ maxWidth: 300 }}>
-                <form onSubmit={handleSearchSubmit}>
-                  <SearchBar
-                    placeholder="Search patterns..."
-                    size="small"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    InputProps={{
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <IconButton
-                            edge="end"
-                            color="inherit"
-                            type="submit"
-                            aria-label="search"
-                          >
-                            <SearchIcon sx={{ color: 'white' }} />
-                          </IconButton>
-                        </InputAdornment>
-                      ),
+                  <ListItemText 
+                    primary={link.text} 
+                    primaryTypographyProps={{
+                      fontWeight: link.highlight || location.pathname === link.path ? 600 : 500,
                     }}
                   />
-                </form>
-              </Box>
-            )}
-          </Toolbar>
-        </StyledAppBar>
-      </HideOnScroll>
-
-      {/* Mobile drawer menu */}
-      <Drawer
-        anchor="left"
-        open={mobileMenuOpen}
-        onClose={closeMobileMenu}
-      >
-        <Box
-          sx={{ width: 250 }}
-          role="presentation"
-          onClick={closeMobileMenu}
-        >
-          <List>
-            {navigationLinks.map((link) => (
-              <ListItem 
-                button 
-                key={link.path} 
-                component={RouterLink} 
-                to={link.path}
-                selected={location.pathname === link.path}
-              >
-                <ListItemText primary={link.text} />
-              </ListItem>
+                </ListItemButton>
+                {link.highlight && <Divider sx={{ mx: 3, my: 2 }} />}
+              </React.Fragment>
             ))}
           </List>
-        </Box>
+        </DrawerContent>
       </Drawer>
-
-      {/* Hero section only on home page */}
-      {isHomePage && (
-        <HeroSection>
-          <Container maxWidth="md">
-            <Typography variant="h1" component="h1" gutterBottom>
-              US Currency Serial Number Patterns
-            </Typography>
-            <Typography variant="h5" component="p" gutterBottom>
-              Discover the hidden value in your wallet
-            </Typography>
-            
-            {/* Search form for home page */}
-            <Box sx={{ mt: 3, mx: 'auto', maxWidth: 500 }}>
-              <form onSubmit={handleSearchSubmit}>
-                <TextField
-                  fullWidth
-                  placeholder="Search patterns, values, or examples..."
-                  variant="outlined"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="end">
-                        <IconButton
-                          edge="end"
-                          type="submit"
-                          color="primary"
-                          aria-label="search"
-                        >
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    ),
-                    sx: { 
-                      backgroundColor: 'white',
-                      borderRadius: 1 
-                    }
-                  }}
-                  sx={{
-                    '& .MuiOutlinedInput-root': {
-                      '& fieldset': {
-                        borderColor: 'transparent',
-                      },
-                    },
-                  }}
-                />
-              </form>
-            </Box>
-            
-            {/* Quick filter buttons */}
-            <QuickFilterContainer>
-              {quickFilters.map((filter) => (
-                <Chip
-                  key={filter.value}
-                  label={filter.label}
-                  onClick={() => handleQuickFilter(filter.value)}
-                  sx={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-                    color: 'white',
-                    border: '1px solid rgba(255, 255, 255, 0.4)',
-                    '&:hover': {
-                      backgroundColor: 'rgba(255, 255, 255, 0.3)',
-                    },
-                  }}
-                />
-              ))}
-            </QuickFilterContainer>
-          </Container>
-        </HeroSection>
-      )}
     </>
   );
 };
